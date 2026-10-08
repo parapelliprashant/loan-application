@@ -1,11 +1,15 @@
 package com.loanapplication.service.impl;
-
-import com.loanapplication.dto.EmiSchedulerRequestDto;
 import com.loanapplication.dto.EmiSchedulerResponseDto;
 import com.loanapplication.entities.EmiSchedule;
+import com.loanapplication.entities.LoanAccount;
+import com.loanapplication.repo.EmiSchedulerRepo;
+import com.loanapplication.repo.LoanAccountRepo;
 import com.loanapplication.service.EmiSchedluerService;
-import lombok.AllArgsConstructor;
+
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,19 +20,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EmiSchedulerImpl implements EmiSchedluerService {
 
     private final ModelMapper modelMapper;
+    private final EmiSchedulerRepo emiSchedulerRepo;
+    private final LoanAccountRepo loanAccountRepo;
 
 
     @Override
-    public List<EmiSchedulerResponseDto> generateEMiSceduleForEverymonth(EmiSchedulerRequestDto emiSchedulerRequestDto) {
+    public List<EmiSchedulerResponseDto> generateEMiSceduleForEverymonth(int loanAccountId) {
 
-        BigDecimal principal = emiSchedulerRequestDto.getPrincipalAmount();
-        BigDecimal annualRate = emiSchedulerRequestDto.getAnnualRate();
-        int tenure = emiSchedulerRequestDto.getTenure();
-        LocalDate emiDate = emiSchedulerRequestDto.getFirstDueDate();
+          LoanAccount loanAccount =  loanAccountRepo.findById(loanAccountId).orElseThrow(()-> new RuntimeException(""));
+
+        BigDecimal principal = loanAccount.getLoanAmount();
+        BigDecimal annualRate = loanAccount.getInterestRate();
+        int tenure = loanAccount.getTenureMonths();
+        LocalDate emiDate = loanAccount.getDisbursementDate().plusMonths(1).toLocalDate();
 
         BigDecimal monthlyRate = annualRate.divide(BigDecimal.valueOf(12),10, RoundingMode.HALF_UP)
                 .divide(BigDecimal.valueOf(100),2,RoundingMode.HALF_UP);
@@ -63,7 +71,7 @@ public class EmiSchedulerImpl implements EmiSchedluerService {
 
 
                EmiSchedule schedule = new EmiSchedule();
-               schedule.setLoanAccount(null);
+               schedule.setLoanAccount(loanAccount);
                schedule.setInstallmentNo(i);
                schedule.setDueDate(emiDate);
                schedule.setOpeningBalance(openingBalance);
@@ -75,9 +83,12 @@ public class EmiSchedulerImpl implements EmiSchedluerService {
 
                emiSchedulesList.add(schedule);
 
+
                openingBalance = closingBalance;
                emiDate = emiDate.plusMonths(1);
            }
+
+                emiSchedulerRepo.saveAll(emiSchedulesList);
 
 
            return emiSchedulesList.stream().map(schedule -> modelMapper.map(schedule, EmiSchedulerResponseDto.class))
@@ -87,4 +98,14 @@ public class EmiSchedulerImpl implements EmiSchedluerService {
 
 
     }
+
+    @Override
+    public Page<EmiSchedulerResponseDto> getEmiScheduleforParticularCustomer(int loanId, Pageable pageable) {
+
+          Page<EmiSchedule> emiScheduleList =      emiSchedulerRepo.findEmiSchedulesByLoanId(loanId,pageable);
+
+          return  emiScheduleList.map(emiSchedule -> modelMapper.map(emiScheduleList, EmiSchedulerResponseDto.class));
+    }
+
+
 }
