@@ -1,11 +1,12 @@
 package com.loanapplication.exception;
 
+import com.loanapplication.helper.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import securitydemo.helper.ApiResponse;
-import securitydemo.helper.ErrorResponse;
+import com.loanapplication.helper.ErrorResponse;
+
 
 import java.time.LocalDateTime;
 

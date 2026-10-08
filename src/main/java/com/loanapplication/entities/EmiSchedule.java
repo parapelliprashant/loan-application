@@ -25,7 +25,7 @@ public class EmiSchedule {
     private LoanAccount loanAccount;
 
     @Column(name = "InstallmentNo", nullable = false)
-    private Integer installmentNo;
+    private Integer installmentNo;gi
 
     @Column(name = "DueDate", nullable = false)
     private LocalDate dueDate;
