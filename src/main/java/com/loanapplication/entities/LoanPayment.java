@@ -33,4 +33,10 @@ public class LoanPayment {
 
     @Column(name = "PaymentName")
     private String paymentName;
+
+    @Column(name = "RazorpayOrderId")
+    private String razorpayOrderId;
+
+    @Column(name = "RazorpayPaymentId")
+    private String razorpayPaymentId;
 }
