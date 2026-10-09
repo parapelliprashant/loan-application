@@ -2,6 +2,7 @@ package com.loanapplication.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class  SupportTicket {
+public class SupportTicket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
