@@ -36,7 +36,12 @@ public class EmiSchedulerImpl implements EmiSchedluerService {
         BigDecimal principal = loanAccount.getLoanAmount();
         BigDecimal annualRate = loanAccount.getInterestRate();
         int tenure = loanAccount.getTenureMonths();
-        LocalDate emiDate = loanAccount.getDisbursementDate().plusMonths(1).toLocalDate();
+
+       LocalDate disbursedate =  loanAccount.getDisbursementDate().toLocalDate();
+             int emidate =                      loanAccount.getLoanDeal().getEmiDay();
+        LocalDate firstEmiDate =   generateFirstEmiDate(disbursedate,emidate);
+
+
 
         BigDecimal monthlyRate = annualRate.divide(BigDecimal.valueOf(12),10, RoundingMode.HALF_UP)
                 .divide(BigDecimal.valueOf(100),2,RoundingMode.HALF_UP);
@@ -73,7 +78,7 @@ public class EmiSchedulerImpl implements EmiSchedluerService {
                EmiSchedule schedule = new EmiSchedule();
                schedule.setLoanAccount(loanAccount);
                schedule.setInstallmentNo(i);
-               schedule.setDueDate(emiDate);
+               schedule.setDueDate(firstEmiDate);
                schedule.setOpeningBalance(openingBalance);
                schedule.setInterestAmount(interestAmount);
                schedule.setPrincipalAmount(principalAmount);
@@ -85,7 +90,7 @@ public class EmiSchedulerImpl implements EmiSchedluerService {
 
 
                openingBalance = closingBalance;
-               emiDate = emiDate.plusMonths(1);
+               firstEmiDate = firstEmiDate.plusMonths(1);
            }
 
                 emiSchedulerRepo.saveAll(emiSchedulesList);
@@ -93,19 +98,21 @@ public class EmiSchedulerImpl implements EmiSchedluerService {
 
            return emiSchedulesList.stream().map(schedule -> modelMapper.map(schedule, EmiSchedulerResponseDto.class))
                    .collect(Collectors.toList());
-
-
-
-
     }
-
     @Override
     public Page<EmiSchedulerResponseDto> getEmiScheduleforParticularCustomer(int loanId, Pageable pageable) {
-
-          Page<EmiSchedule> emiScheduleList =      emiSchedulerRepo.findEmiSchedulesByLoanId(loanId,pageable);
-
-          return  emiScheduleList.map(emiSchedule -> modelMapper.map(emiScheduleList, EmiSchedulerResponseDto.class));
+        Page<EmiSchedule> emiScheduleList =      emiSchedulerRepo.findEmiSchedulesByLoanId(loanId,pageable);
+        return  emiScheduleList.map(emiSchedule -> modelMapper.map(emiScheduleList, EmiSchedulerResponseDto.class));
     }
+
+
+
+    private LocalDate generateFirstEmiDate(LocalDate disbursmentDay,int emiDay)
+    {
+        LocalDate emimonth =           disbursmentDay.plusMonths(1);
+        return emimonth.withDayOfMonth(emiDay);
+    }
+
 
 
 }

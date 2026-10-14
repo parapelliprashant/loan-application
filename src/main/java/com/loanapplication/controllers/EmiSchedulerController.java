@@ -5,6 +5,7 @@ import com.loanapplication.dto.EmiSchedulerResponseDto;
 import com.loanapplication.entities.EmiSchedule;
 import com.loanapplication.helper.ApiResponse;
 import com.loanapplication.service.EmiSchedluerService;
+import com.loanapplication.service.scheduler.EmiReminder;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import java.util.List;
 public class EmiSchedulerController {
 
     private final EmiSchedluerService emiSchedluerService;
+    private final EmiReminder emiReminder;
 
 
     @PostMapping("{loanAccountId}/emi-schedule")
@@ -47,6 +49,15 @@ public class EmiSchedulerController {
 
          return ResponseEntity.ok(response);
     }
+
+        @PostMapping("/sendReminder")
+    public ResponseEntity<ApiResponse<?>> sendDailyReminder()
+        {
+                    emiReminder.processDailyReminders();
+
+               ApiResponse<?> response=      new ApiResponse<>(true,"Notification send sucesfully",null,null);
+              return       ResponseEntity.ok(response);
+        }
 
 
 
