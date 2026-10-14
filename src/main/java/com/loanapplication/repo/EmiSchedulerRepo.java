@@ -1,3 +1,4 @@
+
 package com.loanapplication.repo;
 
 import com.loanapplication.entities.EmiSchedule;
@@ -8,10 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface EmiSchedulerRepo extends JpaRepository<EmiSchedule, Integer> {
+public interface EmiSchedulerRepo
+        extends JpaRepository<EmiSchedule, Integer> {
 
     @Query(
             value = "SELECT e FROM EmiSchedule e " +
@@ -25,5 +28,18 @@ public interface EmiSchedulerRepo extends JpaRepository<EmiSchedule, Integer> {
             Pageable pageable
     );
 
-    List<EmiSchedule> findByLoanAccountLoanAccountId(Integer loanAccountId);
+    List<EmiSchedule> findByLoanAccountLoanAccountId(
+            Integer loanAccountId
+    );
+
+    @Query(
+            "SELECT e FROM EmiSchedule e " +
+                    "JOIN FETCH e.loanAccount la " +
+                    "WHERE e.dueDate <= :emiDate " +
+                    "AND e.paymentStatus = 'UNPAID' " +
+                    "ORDER BY e.dueDate ASC"
+    )
+    List<EmiSchedule> sendNotificationsRegardingpaymentBeforeDueDateAndUnpaidEmis(
+            @Param("emiDate") LocalDate emiDate
+    );
 }

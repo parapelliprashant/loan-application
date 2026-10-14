@@ -1,14 +1,14 @@
+
 package com.loanapplication.service;
 
-import com.loanapplication.dto.CibilScoreRequest;
-import com.loanapplication.dto.CibilScoreResponse;
-
-import java.util.List;
+import com.loanapplication.dto.CibilRequestDto;
+import com.loanapplication.dto.CibilResponseDto;
 
 public interface CibilService {
 
-    CibilScoreResponse generateScore(CibilScoreRequest request);
+    CibilResponseDto generateCibilScore(CibilRequestDto request);
 
-    CibilScoreResponse getCurrentScore(Integer customerId);
+    CibilResponseDto getLatestCibilReport(Integer customerId);
 
+    CibilResponseDto getCibilReportById(Integer reportId);
 }
