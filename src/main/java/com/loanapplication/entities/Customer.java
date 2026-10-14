@@ -26,6 +26,9 @@ public class Customer {
     @Column(name = "LastName")
     private String lastName;
 
+    @Column(name = "Age")
+    private Integer age;
+
     @Column(name = "Email", nullable = false, unique = true)
     private String email;
 
@@ -38,11 +41,17 @@ public class Customer {
     @Column(name = "AadhaarNo")
     private String aadhaarNo;
 
+    @Column(name = "Pan")
+    private String pan;
+
     @Column(name = "EmploymentType")
     private String employmentType;
 
     @Column(name = "MonthlyIncome", precision = 18, scale = 2)
     private BigDecimal monthlyIncome;
+
+    @Column(name = "MonthlyExpense", precision = 18, scale = 2)
+    private BigDecimal monthlyExpense;
 
     @Column(name = "IsEmailVerified", nullable = false)
     private Boolean emailVerified = false;

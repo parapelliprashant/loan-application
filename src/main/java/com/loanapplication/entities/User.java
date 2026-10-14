@@ -41,6 +41,30 @@ public class User {
     @Column(name = "Password")
     private String password;
 
+    @Column(name = "Enabled", nullable = false)
+    private Boolean enabled = true;
+
+    @Column(name = "TotpConfigured", nullable = false)
+    private Boolean totpConfigured = false;
+
+    @Column(name = "SecretKey")
+    private String secretKey;
+
+    @Column(name = "PendingSecret")
+    private String pendingSecret;
+
+    @Column(name = "EmailOtpHash")
+    private String emailOtpHash;
+
+    @Column(name = "EmailOtpExpiry")
+    private java.time.LocalDateTime emailOtpExpiry;
+
+    @Column(name = "EmailOtpAttempts")
+    private Integer emailOtpAttempts = 0;
+
+    @Column(name = "EmailOtpSentAt")
+    private java.time.LocalDateTime emailOtpSentAt;
+
     @OneToMany(mappedBy = "officer")
     private List<DealReview> dealReviews;
 
