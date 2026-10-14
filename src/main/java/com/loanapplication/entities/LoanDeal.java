@@ -5,8 +5,11 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+//siya
+import java.time.LocalDate;
+
 @Entity
-@Table(name = "LoanDeals")
+@Table(name = "loan_deals")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,7 +27,15 @@ public class LoanDeal {
 
     @Column(name = "LoanType")
     private String loanType;
+//    siya
+    @Column(name = "PreferredDisbursementDate")
+    private LocalDate preferredDisbursementDate;
 
+    @Column(name = "DealStatus")
+    private String dealStatus;
+// siya
+    @Column(name = "AccountHolderName")
+    private String accountHolderName;
     @Column(name = "LoanAmount", precision = 18, scale = 2)
     private BigDecimal loanAmount;
 
