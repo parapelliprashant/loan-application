@@ -9,6 +9,9 @@ import com.loanapplication.helper.ErrorResponse;
 
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatusCode;
+
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -132,6 +135,31 @@ public ApiResponse<Object> handleLoanEligibility(
                 null,
                 errorResponse
         );
+    }
+
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public org.springframework.http.ResponseEntity<ApiResponse<Object>>
+    handleResponseStatusException(ResponseStatusException exception) {
+
+        HttpStatusCode status = exception.getStatusCode();
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                status.toString(),
+                exception.getReason(),
+                LocalDateTime.now()
+        );
+
+        ApiResponse<Object> response = new ApiResponse<>(
+                false,
+                exception.getReason(),
+                null,
+                errorResponse
+        );
+
+        return org.springframework.http.ResponseEntity
+                .status(status)
+                .body(response);
     }
 
     @ExceptionHandler(Exception.class)

@@ -74,17 +74,56 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS))
+
+
                 .authorizeHttpRequests(auth -> auth
+                        // Public authentication endpoints
                         .requestMatchers(
                                 "/api/v1/auth/register",
                                 "/api/v1/auth/login",
                                 "/error"
                         ).permitAll()
+
                         .requestMatchers(
                                 "/api/v1/auth/totp/**"
                         ).permitAll()
+
+                        // Customers can view their own KYC documents
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.GET,
+                                "/api/v1/kyc/documents"
+                        ).hasRole("CUSTOMER")
+
+                        // Customers can submit documents using either endpoint
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.POST,
+                                "/api/v1/kyc/documents",
+                                "/api/v1/kyc/*/documents"
+                        ).hasRole("CUSTOMER")
+
+                        // Only officers can verify or reject individual documents
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.PUT,
+                                "/api/v1/kyc/*/verify",
+                                "/api/v1/kyc/*/reject"
+                        ).hasRole("OFFICER")
+
+                        // Only officers can view customer KYC details
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.GET,
+                                "/api/v1/kyc/*"
+                        ).hasRole("OFFICER")
+
+                        // Only officers can access the start-KYC endpoint
+                        .requestMatchers(
+                                org.springframework.http.HttpMethod.POST,
+                                "/api/v1/kyc/*"
+                        ).hasRole("OFFICER")
+
+                        // All other endpoints require authentication
                         .anyRequest().authenticated()
                 )
+
                 .authenticationProvider(
                         authenticationProvider(
                                 userDetailsService(),
