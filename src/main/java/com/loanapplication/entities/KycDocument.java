@@ -28,4 +28,7 @@ public class KycDocument {
 
     @Column(name = "VerificationStatus")
     private String verificationStatus;
+
+    @Column(name = "RejectionReason", length = 500)
+    private String rejectionReason;
 }
