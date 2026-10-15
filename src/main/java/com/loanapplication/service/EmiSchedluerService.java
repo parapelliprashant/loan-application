@@ -15,5 +15,10 @@ public interface EmiSchedluerService {
 
     public Page<EmiSchedulerResponseDto> getEmiScheduleforParticularCustomer(int loanAccountId, Pageable pageable);
 
+    List<EmiSchedulerResponseDto> regenerateFutureEmisAfterPartPayment(
+            int loanAccountId
+    );
 
-              }
+
+
+}

@@ -13,10 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/payments")
-@CrossOrigin(origins = {
-        "http://localhost:4200",
-        "http://localhost:5500"
-})
+@CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class PaymentController {
 
@@ -73,7 +70,7 @@ public class PaymentController {
 
 
 
-    @GetMapping("/order/{loanAccountId}")
+    @PostMapping("/order/{loanAccountId}")
     public ResponseEntity<
             ApiResponse<PaymentOrderResponseDto>> createPaymentOrder(
             @PathVariable Integer loanAccountId) {
@@ -139,4 +136,45 @@ public class PaymentController {
                 )
         );
     }
+
+    @PostMapping("/part-payment/order/{foreClosureId}")
+    public ResponseEntity<ApiResponse<PaymentOrderResponseDto>>
+    createPartPaymentOrder(
+            @PathVariable Integer foreClosureId) {
+
+        PaymentOrderResponseDto order =
+                paymentService.createPartPaymentOrder(foreClosureId);
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Part-payment order created successfully",
+                        order,
+                        null
+                )
+        );
+    }
+
+    @PostMapping("/part-payment/verify/{foreClosureId}")
+    public ResponseEntity<ApiResponse<PaymentResponseDto>>
+    verifyPartPayment(
+            @PathVariable Integer foreClosureId,
+            @RequestBody PaymentVerificationRequestDto request) {
+
+        PaymentResponseDto payment =
+                paymentService.verifyPartPayment(
+                        foreClosureId,
+                        request
+                );
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Part-payment verified successfully",
+                        payment,
+                        null
+                )
+        );
+    }
+
 }

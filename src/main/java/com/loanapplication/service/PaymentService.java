@@ -1,4 +1,4 @@
-package com.loanapplication.service;
+ package com.loanapplication.service;
 
 import com.loanapplication.dto.EmiPaymentResponseDto;
 import com.loanapplication.dto.PaymentOrderResponseDto;
@@ -8,21 +8,34 @@ import com.loanapplication.dto.PaymentVerificationRequestDto;
 import com.loanapplication.dto.PaymentHistoryResponseDto;
 
 import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 public interface PaymentService {
 
-    List<EmiPaymentResponseDto> getPayableEmis(Integer loanAccountId);
+    // Existing EMI payment methods
+    List<EmiPaymentResponseDto> getPayableEmis(
+            Integer loanAccountId);
 
-    PaymentPreviewResponseDto getPaymentPreview(Integer loanAccountId);
+    PaymentPreviewResponseDto getPaymentPreview(
+            Integer loanAccountId);
 
-    PaymentOrderResponseDto createPaymentOrder(Integer loanAccountId);
+    PaymentOrderResponseDto createPaymentOrder(
+            Integer loanAccountId);
 
-    PaymentResponseDto verifyPayment(PaymentVerificationRequestDto request);
+    PaymentResponseDto verifyPayment(
+            PaymentVerificationRequestDto request);
 
     Page<PaymentHistoryResponseDto> getPaymentHistory(
             Integer loanAccountId,
             int page,
-            int size
-    );
+            int size);
+
+    // New part-payment methods
+    PaymentOrderResponseDto createPartPaymentOrder(
+            Integer foreclosureRequestId);
+
+    PaymentResponseDto verifyPartPayment(
+            Integer foreclosureRequestId,
+            PaymentVerificationRequestDto request);
 }

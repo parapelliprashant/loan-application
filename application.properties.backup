@@ -1,0 +1,33 @@
+
+spring.application.name=loan-application
+
+# ===============================
+# MySQL Database
+# ===============================
+spring.datasource.url=jdbc:mysql://localhost:3306/loan-application?useSSL=false&allowPublicKeyRetrieval=true
+spring.datasource.username=root
+spring.datasource.password=root123
+
+# ===============================
+# JPA / Hibernate
+# ===============================
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# ===============================
+# Gmail SMTP
+# ===============================
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=${MAIL_USERNAME:your-email@gmail.com}
+spring.mail.password=${MAIL_PASSWORD:your-app-password}
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+# ===============================
+# Razorpay Test Credentials
+# ===============================
+razorpay.key.id=rzp_test_TlS37Bpz0s1fBE
+razorpay.key.secret=97oUJJQnH622V1sbgpoT2erd
+

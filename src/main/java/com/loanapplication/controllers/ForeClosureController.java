@@ -17,13 +17,23 @@ public class ForeClosureController {
 
     @PostMapping("{loanId}/foreclosure/quote")
     public ResponseEntity<ApiResponse<ForeClosureResponseDto>> createForeClosureQuote(@PathVariable int loanId, @RequestBody ForeClosureRequestDto
-                                                                                      foreClosureRequestDto)
+            foreClosureRequestDto)
     {
-            ForeClosureResponseDto foreClosureResponseDto =       loanClosureService.createForeClosureRequest(loanId,foreClosureRequestDto);
+        ForeClosureResponseDto foreClosureResponseDto =       loanClosureService.createForeClosureRequest(loanId,foreClosureRequestDto);
 
-            ApiResponse<ForeClosureResponseDto> response = new ApiResponse<ForeClosureResponseDto>(true,"ForeClosure Created SucesFully",foreClosureResponseDto,null);
+        ApiResponse<ForeClosureResponseDto> response = new ApiResponse<ForeClosureResponseDto>(true,"ForeClosure Created SucesFully",foreClosureResponseDto,null);
 
-          return   ResponseEntity.ok(response);
+        return   ResponseEntity.ok(response);
+
+    }
+
+    @PostMapping("{foreClosureId}/foreclosure/approve")
+    public ResponseEntity<ApiResponse<ForeClosureResponseDto>> processForeClosureQuote(@PathVariable Integer foreClosureId)
+    {
+        ForeClosureResponseDto foreClosureResponseDto =       loanClosureService.processForeClosureRequest(foreClosureId);
+        ApiResponse<ForeClosureResponseDto> response = new ApiResponse<ForeClosureResponseDto>(true,"ForeClosure Created SucesFully",foreClosureResponseDto,null);
+
+        return   ResponseEntity.ok(response);
 
     }
 
